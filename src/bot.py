@@ -925,6 +925,5 @@ async def level(ctx):
 
 
 #Assigns the bot to the token
-with open("Token/token.json",'r') as file:
-    token = file.read()
+token = "SURE"
 client.run(token)

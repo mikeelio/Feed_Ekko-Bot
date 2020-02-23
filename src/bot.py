@@ -7,6 +7,8 @@ import shutil
 from discord.utils import get
 import mysql.connector
 import json
+import configparser
+from imgurpython import ImgurClient
 
 # generate random integer values
 from random import seed
@@ -19,6 +21,11 @@ mydb = mysql.connector.connect(
     passwd="",
     auth_plugin="mysql_native_password"
 )
+
+#Setting up token
+config = configparser.ConfigParser()
+config.read('Token/token.ini')
+token = config.get('token', 'token')
 
 #Setting up the prefix the bot will use
 client = commands.Bot(command_prefix = '>')
@@ -57,12 +64,14 @@ async def about(ctx):
     embed.set_thumbnail(url=client.user.avatar_url)
     about = [
         "==About the Bot==",
-        "The Feed_Ekko Bot was created cause the creator(mikeelio) got bored and hated that some bots",
-        "you had to pay for in order to use the goddam volume command.",
+        "The Feed_Ekko Bot was created cause the creator(mikeelio) got bored and hated that for some bots,",
+        "you have to pay for in order to use the goddam volume command.",
         "So now after a month of learning the curse of python and discord.py, we got a 'functioning' bot.",
         "==About the Creator==",
         "The creator of this stupid bot is non other than mikeelio#3708. After graduating college, mans got",
-        "bored and though well time to put some time into making a discord bot cause no one will hire me."
+        "bored and though well time to put some time into making a discord bot cause no one will hire me.",
+        "Twitch: http://gestyy.com/w7Vu5z",
+        "Youtube: http://gestyy.com/w7Viwx"
     ]
     embed.add_field(name="\u200b",value=f"{about[0]}\n {about[1]}\n {about[2]}\n {about[3]}\n {about[4]}\n {about[5]}\n {about[6]}",inline=False)
     await member.send(embed=embed)
@@ -97,6 +106,7 @@ async def help(ctx):
         f"⏺️ \u200b >stop\t        ➡️    \u200b  Stops the music.",
         f"⏺️ \u200b >pause\t       ➡️    \u200b  Pauses the music.",
         f"⏺️ \u200b >resume\t      ➡️    \u200b  Resumes the... I think you get it.",
+        f"⏺️ \u200b >skip\t        ➡️    \u200b  Not Rocket Science(Experimental for now).",
         f"⏺️ \u200b >queue\t       ➡️    \u200b  Displays Queue (Under Construction).",
         f"⏺️ \u200b >volume\t      ➡️    \u200b  Control the volume (Max 200% for safety reasons).",
         f"⏺️ \u200b >nowplaying\t  ➡️    \u200b  Show whats playing (Experimental for now).",
@@ -105,21 +115,60 @@ async def help(ctx):
 
     nsfw = [
         "==NSFW Section==",
-        f"⏺️ \u200b >amateur\t          ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >anal\t             ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >asianporn\t        ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >ass\t              ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >bdsm\t             ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >boobs\t            ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >ecchi\t            ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >getnsfw\t          ➡️    \u200b  Role for Channel and Command.",
-        f"⏺️ \u200b >hentai\t           ➡️    \u200b  Its Art.",
-        f"⏺️ \u200b >porn\t             ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >pussy\t            ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >redhead\t          ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >rule34\t           ➡️    \u200b  Its Porn.",
-        f"⏺️ \u200b >yuri\t             ➡️    \u200b  Its Porn.",
+        "Sorry but this is under Construction, please kindly fuck off!",
         "=============="
+        # f"⏺️ \u200b >amateur\t          ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >anal\t             ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >asianporn\t        ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >ass\t              ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >bdsm\t             ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >boobs\t            ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >ecchi\t            ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >getnsfw\t          ➡️    \u200b  Role for Channel and Command.",
+        # f"⏺️ \u200b >hentai\t           ➡️    \u200b  Its Art.",
+        # f"⏺️ \u200b >porn\t             ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >pussy\t            ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >redhead\t          ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >rule34\t           ➡️    \u200b  Its Porn.",
+        # f"⏺️ \u200b >yuri\t             ➡️    \u200b  Its Porn.",
+
+    ]
+
+    anime = [
+        "==Anime Meme Section==",
+        f"⏺️ \u200b >baka",
+        f"⏺️ \u200b >bang",
+        f"⏺️ \u200b >bite",
+        f"⏺️ \u200b >blush",
+        f"⏺️ \u200b >cuddle",
+        f"⏺️ \u200b >dab",
+        f"⏺️ \u200b >dance",
+        f"⏺️ \u200b >getfucked",
+        f"⏺️ \u200b >greet",
+        f"⏺️ \u200b >headbang",
+        f"⏺️ \u200b >highfive",
+        f"⏺️ \u200b >hug",
+        f"⏺️ \u200b >kiss",
+        f"⏺️ \u200b >lewd",
+        f"⏺️ \u200b >lick",
+        f"⏺️ \u200b >megumin",
+        f"⏺️ \u200b >nani",
+        f"⏺️ \u200b >neko",
+        f"⏺️ \u200b >nico",
+        f"⏺️ \u200b >nom",
+        f"⏺️ \u200b >owo",
+        f"⏺️ \u200b >pat",
+        f"⏺️ \u200b >poke",
+        f"⏺️ \u200b >punch",
+        f"⏺️ \u200b >rem",
+        f"⏺️ \u200b >shrug",
+        f"⏺️ \u200b >slap",
+        f"⏺️ \u200b >sleepy",
+        f"⏺️ \u200b >stare",
+        f"⏺️ \u200b >thumbsup",
+        f"⏺️ \u200b >tickle",
+        "===================="
+
     ]
 
     embed = discord.Embed()
@@ -127,15 +176,17 @@ async def help(ctx):
     embed.set_thumbnail(url=client.user.avatar_url)
     embed.add_field(name="\u200b",value=f"{general[0]}\n {general[1]}\n {general[2]}\n {general[3]}\n {general[4]}",inline=False)
     embed.add_field(name="\u200b",value=f"{level[0]}\n {level[1]}\n {level[2]}\n {level[3]}",inline=False)
-    embed.add_field(name="\u200b",value=f"{music[0]}\n {music[1]}\n {music[2]}\n {music[3]}\n {music[4]}\n {music[5]}\n {music[6]}\n {music[7]}\n {music[8]}",inline=False)
-    try:
-        role = discord.utils.get(ctx.guild.roles, name="NSFW")
-        if role in member.roles:
-            embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[1]}\n {nsfw[2]}\n {nsfw[3]}\n {nsfw[4]}\n {nsfw[5]}\n {nsfw[6]}\n {nsfw[7]}\n {nsfw[8]}\n {nsfw[9]}\n {nsfw[10]}\n {nsfw[11]}\n {nsfw[12]}\n {nsfw[13]}\n {nsfw[14]}\n {nsfw[15]}")
-        else:
-            embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[8]}\n {nsfw[15]}")
-    except:
-        embed.add_field(name="\u200b", value=f"{nsfw[0]}\n Can ONLY be accessed in a SERVER\n {nsfw[15]}")
+    embed.add_field(name="\u200b",value=f"{music[0]}\n {music[1]}\n {music[2]}\n {music[3]}\n {music[4]}\n {music[5]}\n {music[6]}\n {music[7]}\n {music[8]}\n {music[9]}",inline=False)
+    embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[1]}\n {nsfw[2]}",inline=False)
+    embed.add_field(name="\u200b", value=f"{anime[0]}\n {anime[1]}\n {anime[2]}\n {anime[3]}\n {anime[4]}\n {anime[5]}\n {anime[6]}\n {anime[7]}\n {anime[8]}\n {anime[9]}\n {anime[10]}\n {anime[11]}\n {anime[12]}\n {anime[13]}\n {anime[14]}\n {anime[15]}\n {anime[16]}\n {anime[17]}\n {anime[18]}\n {anime[19]}\n {anime[20]}\n {anime[21]}\n {anime[22]}\n {anime[23]}\n {anime[24]}\n {anime[25]}\n {anime[26]}\n {anime[27]}\n {anime[28]}\n {anime[29]}\n {anime[30]}\n {anime[31]}\n {anime[32]}" ,inline=False)
+    # try:
+    #     role = discord.utils.get(ctx.guild.roles, name="NSFW")
+    #     if role in member.roles:
+    #         embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[1]}\n {nsfw[2]}\n {nsfw[3]}\n {nsfw[4]}\n {nsfw[5]}\n {nsfw[6]}\n {nsfw[7]}\n {nsfw[8]}\n {nsfw[9]}\n {nsfw[10]}\n {nsfw[11]}\n {nsfw[12]}\n {nsfw[13]}\n {nsfw[14]}\n {nsfw[15]}",inline=False)
+    #     else:
+    #         embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[8]}\n {nsfw[15]}",inline=False)
+    # except:
+    #     embed.add_field(name="\u200b", value=f"{nsfw[0]}\n Can ONLY be accessed in a SERVER\n {nsfw[15]},inline=False")
     await member.send(embed=embed)
     await ctx.send(f"📬 You got mail")
 
@@ -145,7 +196,7 @@ async def help(ctx):
 @client.command()
 async def joindiscord(ctx):
     member = ctx.author
-    await member.send("Personal Streaming Server\n https://discord.gg/kdQFwyn")
+    await member.send("Personal Streaming Server\n http://gestyy.com/w7ViEY")
     await ctx.send(f"📬 You got mail")
 #-------------------------------------------------------------------#
 
@@ -153,7 +204,7 @@ async def joindiscord(ctx):
 @client.command()
 async def invite(ctx):
     member = ctx.author
-    await member.send("https://discordapp.com/api/oauth2/authorize?client_id=666071024407674891&permissions=1345834183&scope=bot")
+    await member.send("http://gestyy.com/w7ViTe")
     await ctx.send(f"📬 You got mail")
 #-------------------------------------------------------------------#
 
@@ -280,6 +331,9 @@ async def play (ctx, *url: str):
                 voice.play(discord.FFmpegPCMAudio("song.mp3"), after=lambda e: check_queue())
                 voice.source = discord.PCMVolumeTransformer(voice.source)
                 voice.source.volume = 0.07
+                global nname
+                nname = name.rsplit("-", 1)
+
 
             else:
                 queues.clear()
@@ -422,7 +476,6 @@ async def stop (ctx):
         member = ctx.author
         await ctx.send (f"{member.mention} Music not playing")
 
-
 queues = {}
 
 #Command for queue
@@ -436,7 +489,7 @@ async def skip (ctx):
 
     if voice and voice.is_playing():
         voice.stop()
-        await ctx.send(f"Now Playing: {nname[0]}")
+        await ctx.send(f"Song Skipped")
 
     else:
         member = ctx.author
@@ -460,31 +513,13 @@ async def volume (ctx, volume: int):
 #Command for nowplaying
 @client.command(pass_context=True)
 async def nowplaying (ctx):
-
-    await ctx.send(f"Now Playing: {nname[0]}")
-
-#-------------------------------------------------------------------#
-#-------------------------------------------------------------------#
-#-------------------------------------------------------------------#
-
-
-#-------------------------------------------------------------------#
-#-------------------------------------------------------------------#
-#-------------------------------------------------------------------#
-
-#-------------------------------------------------------------------#
-#--------------------------[Twitch Commands]------------------------#
-#-------------------------------------------------------------------#
-
-#------------------------[Add User's Twitch]------------------------#
-@client.command(pass_content=True)
-async def addstreamer (ctx, member: discord.Member=None):
-    author = ctx.author
-    if member is None:
-        return await ctx.send(f"{author.mention} The command is >addstreamer 'Twitch Username' ")
+    if ctx.voice_client is None:
+        await ctx.send("Sir I am not in a channel")
     else:
-        with open('Twitch.json','w') as f:
-            json.dump(member,f)
+        await ctx.send(f"Now Playing: {nname[0]}")
+
+#-------------------------------------------------------------------#
+#-------------------------------------------------------------------#
 #-------------------------------------------------------------------#
 
 
@@ -501,7 +536,8 @@ async def addstreamer (ctx, member: discord.Member=None):
 #Command for Hi
 @client.command(pass_context = True)
 async def hello (ctx):
-    max_num = 5
+    count = (len([iq for iq in os.scandir('Google Drive Images/Images/General/Hello')]))
+    max_num = count - 1
     num = randint(0,12)
     num = randint(0,max_num)
 
@@ -512,171 +548,433 @@ async def hello (ctx):
 #-------------------------------------------------------------------#
 
 #-------------------------------[Anime]-----------------------------#
+
+#To get link for image/gif from Imgur
+def getLink(data):
+    image_link = []
+
+    config = configparser.ConfigParser()
+    config.read('Imgur/auth.ini')
+
+    client_id = config.get('credentials', 'client_id')
+    client_secret = config.get('credentials', 'client_secret')
+
+    clienta = ImgurClient(client_id, client_secret)
+
+    albums = configparser.ConfigParser()
+    albums.read('Imgur/Anime/' + data + '.ini')
+
+    albums_dark = albums.get('anime','albums').split("\n")
+
+    album_len = len(albums_dark)-1
+    num = randint(0,5)
+    num = randint(0,album_len)
+    images = clienta.get_album_images(str(albums_dark[num]))
+    for image in images:
+        image_link.append(image.link)
+    i = 0
+    link_len = len(image_link)-1
+    num = randint(0,link_len)
+
+    return(image_link[num])
+
 #Command for baka
 @client.command(pass_context = True)
 async def baka (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/Baka')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/Baka/baka({num}).gif"
-    print(sendimage)
+    image_link = getLink("baka")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Baka", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention} is a baka (idiot for the uncultured swines that don't want anime).",embed=embed)
+
 #Command for bang
 @client.command(pass_context = True)
 async def bang (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/bang')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/bang/bang({num}).gif"
-    print(sendimage)
+    image_link = getLink("bang")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Bang", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention} is now dead. (Sorry couldnt come up with something good.)",embed=embed)
 #Command for bite
 @client.command(pass_context = True)
 async def bite (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/bite')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/bite/bite({num}).gif"
-    print(sendimage)
+    image_link = getLink("bite")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Bite", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention} has been bitten.",embed=embed)
 #Command for blush
 @client.command(pass_context = True)
 async def blush (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/blush')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/blush/blush({num}).gif"
-    print(sendimage)
+    image_link = getLink("blush")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Blush", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"Yo {member.mention}, {ctx.author.mention} be blushing.",embed=embed)
 #Command for cuddle
 @client.command(pass_context = True)
 async def cuddle (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/cuddle')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/cuddle/cuddle({num}).gif"
-    print(sendimage)
+    image_link = getLink("cuddle")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Cuddle", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention} better be ready to cuddle.",embed=embed)
 #Command for dab
 @client.command(pass_context = True)
 async def dab (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/dab')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/dab/dab({num}).gif"
-    print(sendimage)
+    image_link = getLink("dab")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Dab", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention} got dabbed on like a bitch (Im sorry for putting this as a description i hate my life)",embed=embed)
 #Command for dance
 @client.command(pass_context = True)
 async def dance (ctx, member : discord.Member=None):
-    count = (len([iq for iq in os.scandir('Google Drive Images/Images/Anime/dance')]))
-    max_num = count - 1
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/dance/dance({num}).gif"
-    print(sendimage)
+    image_link = getLink("dance")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Dance", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention}\n You have been challenged bitch!",embed=embed)
 #Command for getfucked
 @client.command(pass_context = True)
 async def getfucked (ctx, member : discord.Member=None):
-    max_num = 2
-    num = randint(0,12)
-    num = randint(0,max_num)
-
-    sendimage = f"Google Drive Images/Images/Anime/fucked/fucked({num}).gif"
-    print(sendimage)
+    image_link = getLink("getfucked")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Get Fucked", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
 
     if member is None:
-            await ctx.send(file=discord.File(sendimage))
+        await ctx.send(embed=embed)
     else:
-        await ctx.send(f"{member.mention}",file=discord.File(sendimage))
+        await ctx.send(f"{member.mention} got fucked up!",embed=embed)
 #Command for greet
+@client.command(pass_context = True)
+async def greet (ctx, member : discord.Member=None):
+    image_link = getLink("greet")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Greet", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"Hello {member.mention}-san!",embed=embed)
 #Command for headbang
+@client.command(pass_context = True)
+async def headbang (ctx, member : discord.Member=None):
+    image_link = getLink("headbang")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Headbang", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"Dodge this {member.mention}-san!",embed=embed)
 #Command for highfive
+@client.command(pass_context = True)
+async def highfive (ctx, member : discord.Member=None):
+    image_link = getLink("highfive")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - High Five", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"High five {member.mention}!",embed=embed)
 #Command for hug
+@client.command(pass_context = True)
+async def hug (ctx, member : discord.Member=None):
+    image_link = getLink("hug")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Hug", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} better be prepared for this hug!",embed=embed)
 #Command for kiss
+@client.command(pass_context = True)
+async def kiss (ctx, member : discord.Member=None):
+    image_link = getLink("kiss")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Kiss", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"So {ctx.author.mention} kissed {member.mention}...",embed=embed)
 #Command for lewd
+@client.command(pass_context = True)
+async def lewd (ctx, member : discord.Member=None):
+    image_link = getLink("lewd")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Lewd", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"I dont know how to explain this {member.mention}...",embed=embed)
 #Command for lick
+@client.command(pass_context = True)
+async def lick (ctx, member : discord.Member=None):
+    image_link = getLink("lick")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Lick", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"Um you got licked {member.mention}... I suggest you run!",embed=embed)
 #Command for megumin
+@client.command(pass_context = True)
+async def megumin (ctx, member : discord.Member=None):
+    image_link = getLink("megumin")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Megumin", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"EXPLOSIAN {member.mention}!",embed=embed)
 #Command for nani
+@client.command(pass_context = True)
+async def nani (ctx, member : discord.Member=None):
+    image_link = getLink("nani")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Nani", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} got hit with the NANI!",embed=embed)
 #Command for neko
+@client.command(pass_context = True)
+async def neko (ctx, member : discord.Member=None):
+    image_link = getLink("neko")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Neko...", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} I can't say shit",embed=embed)
+#Command for nico
+@client.command(pass_context = True)
+async def nico(ctx, member : discord.Member=None):
+    image_link = getLink("nico")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Nico", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention}, just accept it.",embed=embed)
 #Command for nom
+@client.command(pass_context = True)
+async def nom (ctx, member : discord.Member=None):
+    image_link = getLink("nom")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Nom", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} NOM",embed=embed)
 #Command for owo
+@client.command(pass_context = True)
+async def owo (ctx, member : discord.Member=None):
+    image_link = getLink("owo")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - OWO", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention}",embed=embed)
 #Command for pat
+@client.command(pass_context = True)
+async def pat (ctx, member : discord.Member=None):
+    image_link = getLink("pat")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Pat", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} has been patted by {ctx.author.mention}",embed=embed)
 #Command for poke
+@client.command(pass_context = True)
+async def poke (ctx, member : discord.Member=None):
+    image_link = getLink("poke")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Poke", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} has been poked! We can't say with what...",embed=embed)
 #Command for punch
+@client.command(pass_context = True)
+async def punch (ctx, member : discord.Member=None):
+    image_link = getLink("punch")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Punch", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} got punched..... LIKE A BITCH!",embed=embed)
 #Command for rem
+@client.command(pass_context = True)
+async def rem (ctx, member : discord.Member=None):
+    image_link = getLink("rem")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Rem", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} you have been remmmmmmmmmmed!",embed=embed)
 #Command for slap
+@client.command(pass_context = True)
+async def slap (ctx, member : discord.Member=None):
+    image_link = getLink("slap")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Slap", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{ctx.author.mention} has slapped {member.mention} like a bitch",embed=embed)
 #Command for shrug
+@client.command(pass_context = True)
+async def shrug (ctx, member : discord.Member=None):
+    image_link = getLink("shrug")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Slug", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention}",embed=embed)
 #Command for sleepy
+@client.command(pass_context = True)
+async def sleepy (ctx, member : discord.Member=None):
+    image_link = getLink("sleepy")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Sleepy", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} better be sleppy!",embed=embed)
 #Command for stare
+@client.command(pass_context = True)
+async def stare (ctx, member : discord.Member=None):
+    image_link = getLink("stare")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Stare", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{ctx.author.mention} is staring at {member.mention} (seriously idk what to put here)",embed=embed)
 #Command for thumbsup
+@client.command(pass_context = True)
+async def thumbsup (ctx, member : discord.Member=None):
+    image_link = getLink("thumbsup")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Thumbsup", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention}",embed=embed)
 #Command for tickle
+@client.command(pass_context = True)
+async def tickle (ctx, member : discord.Member=None):
+    image_link = getLink("tickle")
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Tickle", icon_url = client.user.avatar_url)
+    embed.set_image(url=image_link)
+
+    if member is None:
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f"{member.mention} like a bitch",embed=embed)
 #-------------------------------------------------------------------#
 
 #--------------------------------[NS-FW]----------------------------#
 #Command for amateur
 #Command for anal
 #Command for asianporn
-@client.command(pass_context = True)
-async def asianporn (ctx):
-    role = discord.utils.get(ctx.guild.roles, name="NSFW")
-    member = ctx.author
-    if role in member.roles:
-        if ctx.channel.is_nsfw():
-            count = (len([iq for iq in os.scandir('Google Drive Images/Images/NSFW/asianporn')]))
-            max_num = count - 1
-            num = randint(0,12)
-            num = randint(0,max_num)
-
-            sendimage = f"Google Drive Images/Images/NSFW/asianporn/asianporn({num}).png"
-            await ctx.send(file=discord.File(sendimage, spoiler=True))
-        else:
-            member = ctx.author
-            await ctx.send(f"{member.mention} This command can only be used in NSFW chat.")
-    else:
-            await ctx.send(f"{member.mention} You need the NSFW Role sir")
+# @client.command(pass_context = True)
+# async def asianporn (ctx):
+#     role = discord.utils.get(ctx.guild.roles, name="NSFW")
+#     member = ctx.author
+#     if role in member.roles:
+#         if ctx.channel.is_nsfw():
+#             count = (len([iq for iq in os.scandir('Google Drive Images/Images/NSFW/asianporn')]))
+#             max_num = count - 1
+#             num = randint(0,12)
+#             num = randint(0,max_num)
+#
+#             sendimage = f"Google Drive Images/Images/NSFW/asianporn/asianporn({num}).png"
+#             await ctx.send(file=discord.File(sendimage, spoiler=True))
+#         else:
+#             member = ctx.author
+#             await ctx.send(f"{member.mention} This command can only be used in NSFW chat.")
+#     else:
+#             await ctx.send(f"{member.mention} You need the NSFW Role sir")
 
 #Command for ass
 #Command for bdsm
@@ -715,13 +1013,12 @@ async def getnsfw (ctx, member : discord.Member = None):
 #Command for darkmeme
 @client.command(pass_context = True)
 async def darkmeme (ctx):
-    max_num = 76
-    num = randint(0,5)
-    num = randint(0,max_num)
-
-    sendimage = f'Google Drive Images/Images/Memes/Dark Memes/dark_meme({num}).png'
+    sendimage = "https://i.imgur.com/dwv4cP1.gif"
     print(sendimage)
-    await ctx.send(file=discord.File(sendimage))
+    embed = discord.Embed()
+    embed.set_author(name = "Feed_Ekko - Darkmeme", icon_url = client.user.avatar_url)
+    embed.set_image(url="https://i.imgur.com/dwv4cP1.gif")
+    await ctx.send(embed=embed)
 
 #-------------------------------------------------------------------#
 
@@ -743,6 +1040,7 @@ async def on_guild_join(guild):
     mycursor = mydb.cursor()
     mycursor.execute("CREATE DATABASE `" + guild_id + "`")
     mycursor.execute("CREATE TABLE `"+ guild_id +"`.`level_system` ( `userid` VARCHAR(50) NOT NULL , `experience` BIGINT NOT NULL , `level` BIGINT NOT NULL , `username` VARCHAR(50) NOT NULL , `avatarurl` VARCHAR(2083) NOT NULL , PRIMARY KEY (`userid`))")
+    mycursor.execute("CREATE TABLE `"+ guild_id +"`.`twitch` ( `userid` VARCHAR(50) NOT NULL , `username` VARCHAR(50) NOT NULL , `twitch` VARCHAR(50) NOT NULL , PRIMARY KEY (`userid`))")
     mydb.commit()
 
 @client.event
@@ -916,7 +1214,26 @@ async def level(ctx):
     await ctx.send(embed=embed)
 #-------------------------------------------------------------------#
 
+#-------------------------------------------------------------------#
+#-------------------------------------------------------------------#
+#-------------------------------------------------------------------#
 
+#-------------------------------------------------------------------#
+#--------------------------[Twitch Commands]------------------------#
+#-------------------------------------------------------------------#
+
+#------------------------[Add User's Twitch]------------------------#
+@client.command(pass_content=True)
+async def addstreamer (ctx, member: discord.Member=None):
+    guild_id = str(ctx.guild_id)
+    author = ctx.author
+    if member is None:
+        return await ctx.send(f"{author.mention} The command is >addstreamer 'Twitch Username' ")
+    else:
+        mycursor = mydb.cursor()
+
+        mydb.commit()
+#-------------------------------------------------------------------#
 
 
 #-------------------------------------------------------------------#
@@ -925,5 +1242,5 @@ async def level(ctx):
 
 
 #Assigns the bot to the token
-token = "SURE"
+
 client.run(token)

@@ -46,6 +46,24 @@ async def unload(ctx, file):
     else:
         await ctx.send("Sorry but only mikeelio (THE OWNER) can run this command")
 
+#Reload single command
+@client.command()
+async def reload(ctx, file):
+    author = str(ctx.author.id)
+    if author == owner_id:
+        client.unload_extension(f'cogs.{file}')
+        await ctx.send(f"{file} has been unloaded.")
+        time.sleep(2)
+        client.unload_extension(f'cogs.{file}')
+        await ctx.send(f"{file} has been unloaded.")
+        time.sleep(2)
+        await ctx.channel.purge(limit=4)
+    else:
+        await ctx.send("Sorry but only mikeelio (THE OWNER) can run this command")
+
+
+
+#loads all cogs at startup
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')

@@ -24,7 +24,7 @@ mydb = mysql.connector.connect(
 
 #Setting up token
 config = configparser.ConfigParser()
-config.read('Token/token.ini')
+config.read('../token.ini')
 token = config.get('token', 'token')
 
 #Setting up the prefix the bot will use
@@ -554,7 +554,7 @@ def getLink(data):
     image_link = []
 
     config = configparser.ConfigParser()
-    config.read('Imgur/auth.ini')
+    config.read('../auth.ini')
 
     client_id = config.get('credentials', 'client_id')
     client_secret = config.get('credentials', 'client_secret')
@@ -562,7 +562,7 @@ def getLink(data):
     clienta = ImgurClient(client_id, client_secret)
 
     albums = configparser.ConfigParser()
-    albums.read('Imgur/Anime/' + data + '.ini')
+    albums.read('./Imgur/Anime/' + data + '.ini')
 
     albums_dark = albums.get('anime','albums').split("\n")
 

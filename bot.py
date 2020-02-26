@@ -17,17 +17,6 @@ async def on_ready():
     await client.change_presence(activity=activity)
     print (client.user.name+' Bot is ready.')
 
-#-------------------------------------------------------------------#
-#Learning Stuff
-@client.event
-async def on_member_join(member):
-    print(f'{member} has joined a server.')
-
-@client.event
-async def on_member_remove(member):
-    print(f'{member} has left a server.')
-#-------------------------------------------------------------------#
-
 
 #-------------------------------------------------------------------#
 #-----------------------------[Commands]----------------------------#

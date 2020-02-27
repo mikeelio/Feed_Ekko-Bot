@@ -68,6 +68,29 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
+
+@client.command()
+async def on_message(message):
+    if isinstance(message.channel, discord.DMChannel):
+        pass
+    elif message.author.bot == True:
+        pass
+
+    else:
+        guild_id = message.guild.id
+        member = message.author
+        if member.id == bot_id:
+            pass
+        else:
+            await update_data(member, guild_id, message)
+    if isinstance(message.channel, discord.DMChannel):
+        pass
+    else:
+        await client.process_commands(message)
+
+
+
+
 #-------------------------------------------------------------------#
 #-------------------------------------------------------------------#
 #-------------------------------------------------------------------#
@@ -78,4 +101,5 @@ config = configparser.ConfigParser()
 config.read('../token.ini')
 token = config.get('token', 'token')
 owner_id = str(config.get('token','id'))
+bot_id = str(config.get('token','bot_id'))
 client.run(token)

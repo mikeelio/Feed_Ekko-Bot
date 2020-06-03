@@ -21,7 +21,7 @@ class Help (commands.Cog):
         level = [
             "==Level Commands==",
             f"⏺️ \u200b >top3\t        ➡️    \u200b  See the top 3 members on your server.",
-            f"⏺️ \u200b >level\t       ➡️    \u200b  Stops the music.",
+            f"⏺️ \u200b >level\t       ➡️    \u200b  Check your score.",
             "================"
         ]
 
@@ -37,11 +37,11 @@ class Help (commands.Cog):
             f"⏺️ \u200b >nowplaying\t  ➡️    \u200b  Show whats playing (Experimental for now).",
             "================"
         ]
-
-        nsfw = [
-            "==NSFW Section==",
-            "Sorry but this is under Construction, please kindly fuck off!",
-            "=============="
+        #
+        # nsfw = [
+        #     "==NSFW Section==",
+        #     "Sorry but this is under Construction, please kindly fuck off!",
+        #     "=============="
             # f"⏺️ \u200b >amateur\t          ➡️    \u200b  Its Porn.",
             # f"⏺️ \u200b >anal\t             ➡️    \u200b  Its Porn.",
             # f"⏺️ \u200b >asianporn\t        ➡️    \u200b  Its Porn.",
@@ -57,7 +57,7 @@ class Help (commands.Cog):
             # f"⏺️ \u200b >rule34\t           ➡️    \u200b  Its Porn.",
             # f"⏺️ \u200b >yuri\t             ➡️    \u200b  Its Porn.",
 
-        ]
+        # ]
 
         anime = [
             "==Anime Meme Section==",
@@ -101,8 +101,8 @@ class Help (commands.Cog):
         embed.set_thumbnail(url=self.client.user.avatar_url)
         embed.add_field(name="\u200b",value=f"{general[0]}\n {general[1]}\n {general[2]}\n {general[3]}\n {general[4]}",inline=False)
         embed.add_field(name="\u200b",value=f"{level[0]}\n {level[1]}\n {level[2]}\n {level[3]}",inline=False)
-        embed.add_field(name="\u200b",value=f"{music[0]}\n {music[1]}\n {music[2]}\n {music[3]}\n {music[4]}\n {music[5]}\n {music[6]}\n {music[7]}\n {music[8]}\n {music[9]}",inline=False)
-        embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[1]}\n {nsfw[2]}",inline=False)
+        # embed.add_field(name="\u200b",value=f"{music[0]}\n {music[1]}\n {music[2]}\n {music[3]}\n {music[4]}\n {music[5]}\n {music[6]}\n {music[7]}\n {music[8]}\n {music[9]}",inline=False)
+        # embed.add_field(name="\u200b", value=f"{nsfw[0]}\n {nsfw[1]}\n {nsfw[2]}",inline=False)
         embed.add_field(name="\u200b", value=f"{anime[0]}\n {anime[1]}\n {anime[2]}\n {anime[3]}\n {anime[4]}\n {anime[5]}\n {anime[6]}\n {anime[7]}\n {anime[8]}\n {anime[9]}\n {anime[10]}\n {anime[11]}\n {anime[12]}\n {anime[13]}\n {anime[14]}\n {anime[15]}\n {anime[16]}\n {anime[17]}\n {anime[18]}\n {anime[19]}\n {anime[20]}\n {anime[21]}\n {anime[22]}\n {anime[23]}\n {anime[24]}\n {anime[25]}\n {anime[26]}\n {anime[27]}\n {anime[28]}\n {anime[29]}\n {anime[30]}\n {anime[31]}\n {anime[32]}" ,inline=False)
         # try:
         #     role = discord.utils.get(ctx.guild.roles, name="NSFW")

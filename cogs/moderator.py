@@ -33,7 +33,7 @@ class Moderator (commands.Cog):
                 await member.ban(reason=reason)
                 await ctx.send(f"{member} has been banned by {ctx.author.mention}")
 
-    #Command to unban userid
+    #Command to unban user
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, member : discord.Member = None):
@@ -52,6 +52,7 @@ class Moderator (commands.Cog):
                     await ctx.guild.unban(user)
                     await ctx.send (f'Unbanned{user.mention}')
                     return
+
 
 def setup(client):
     client.add_cog(Moderator(client))
